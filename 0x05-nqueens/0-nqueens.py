@@ -1,92 +1,85 @@
 #!/usr/bin/python3
 """
-N Queens Problem Solver
+N Queens puzzle solver using backtracking algorithm.
 
-This module solves the N Queens puzzle using backtracking algorithm.
 The N Queens puzzle is the challenge of placing N non-attacking queens
-on an N×N chessboard.
+on an N×N chessboard. This program finds and prints all possible solutions.
 """
 
 import sys
 
 
-def is_safe(board, row, col, n):
+def is_safe(board, row, col):
     """
-    Check if it's safe to place a queen at board[row][col].
-
+    Check if placing a queen at position (row, col) is safe.
+    
+    A position is safe if no other queen can attack it.
+    Queens attack horizontally, vertically, and diagonally.
+    
     Args:
-        board: Current state of the board
-        row: Row position to check
-        col: Column position to check
-        n: Size of the board
-
+        board (list): Current board state with queen positions
+        row (int): Row to check
+        col (int): Column to check
+        
     Returns:
-        bool: True if safe to place queen, False otherwise
+        bool: True if position is safe, False otherwise
     """
-    # Check this column on upper rows
+    # Check if any previously placed queen attacks this position
     for i in range(row):
+        # Check column conflict
         if board[i] == col:
             return False
-
-    # Check upper diagonal on left side
-    for i in range(row):
-        if board[i] == col - (row - i):
+        
+        # Check diagonal conflicts
+        # Left diagonal: row difference equals column difference
+        if abs(board[i] - col) == abs(i - row):
             return False
-
-    # Check upper diagonal on right side
-    for i in range(row):
-        if board[i] == col + (row - i):
-            return False
-
+    
     return True
 
 
-def solve_nqueens(board, row, n, solutions):
+def solve_nqueens(n, row, board, solutions):
     """
-    Solve N Queens problem using backtracking.
-
+    Recursively solve N Queens using backtracking.
+    
     Args:
-        board: Current state of the board (list of column positions)
-        row: Current row being processed
-        n: Size of the board
-        solutions: List to store all valid solutions
+        n (int): Size of the chessboard (N×N)
+        row (int): Current row being processed
+        board (list): Current board state (board[i] = column of queen in row i)
+        solutions (list): List to store all valid solutions
     """
-    # Base case: If all queens are placed
+    # Base case: if all queens are placed
     if row == n:
         # Convert board representation to required format
-        solution = []
-        for i in range(n):
-            solution.append([i, board[i]])
+        solution = [[i, board[i]] for i in range(n)]
         solutions.append(solution)
         return
-
+    
     # Try placing queen in each column of current row
     for col in range(n):
-        if is_safe(board, row, col, n):
+        if is_safe(board, row, col):
             # Place queen
             board[row] = col
-
+            
             # Recursively place queens in remaining rows
-            solve_nqueens(board, row + 1, n, solutions)
-
-            # Backtrack (no need to explicitly remove queen
-            # since we'll overwrite board[row] in next iteration)
+            solve_nqueens(n, row + 1, board, solutions)
+            
+            # Backtrack (remove queen) - this happens automatically
+            # when the function returns and board[row] gets overwritten
 
 
 def nqueens(n):
     """
-    Main function to solve N Queens problem and print all solutions.
-
+    Find and print all solutions to the N Queens problem.
+    
     Args:
-        n: Size of the chessboard (n x n)
+        n (int): Size of the chessboard
     """
-    # Initialize board - board[i] represents column position of queen in row i
-    board = [-1] * n
     solutions = []
-
-    # Solve the problem
-    solve_nqueens(board, 0, n, solutions)
-
+    board = [-1] * n  # board[i] represents column of queen in row i
+    
+    solve_nqueens(n, 0, board, solutions)
+    
     # Print all solutions
     for solution in solutions:
         print(solution)
@@ -94,26 +87,26 @@ def nqueens(n):
 
 def main():
     """
-    Main function to handle command line arguments and input validation.
+    Main function to handle command line arguments and execute N Queens solver.
     """
     # Check number of arguments
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-
-    # Validate that N is an integer
+    
+    # Validate N is a number
     try:
         n = int(sys.argv[1])
     except ValueError:
         print("N must be a number")
         sys.exit(1)
-
-    # Check if N is at least 4
+    
+    # Validate N is at least 4
     if n < 4:
         print("N must be at least 4")
         sys.exit(1)
-
-    # Solve N Queens problem
+    
+    # Solve N Queens
     nqueens(n)
 
 
