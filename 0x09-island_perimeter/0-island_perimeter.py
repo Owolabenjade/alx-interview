@@ -7,10 +7,10 @@ Module that calculates the perimeter of an island in a grid
 def island_perimeter(grid):
     """
     Calculate the perimeter of the island described in grid
- 
+
     Args:
         grid: List of list of integers where 0 = water, 1 = land
-  
+
     Returns:
         Integer representing the perimeter of the island
     """
@@ -25,7 +25,8 @@ def island_perimeter(grid):
         for j in range(cols):
             if grid[i][j] == 1:  # Found land cell
                 # Check all 4 directions (up, down, left, right)
-                # Add 1 to perimeter for each edge that touches water or boundary
+                # Add 1 to perimeter for each edge
+                # that touches water or boundary
 
                 # Check top edge
                 if i == 0 or grid[i-1][j] == 0:
