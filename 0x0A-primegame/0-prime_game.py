@@ -35,25 +35,25 @@ def sieve_of_eratosthenes(limit):
 def simulate_game(n):
     """
     Simulates a single game and determines the winner.
-    
+
     Args:
         n (int): The upper bound of numbers available (1 to n)
-    
+
     Returns:
         str: "Maria" if Maria wins, "Ben" if Ben wins
     """
     if n <= 1:
         return "Ben"  # No primes available, Ben wins by default
-    
+
     # Get all primes up to n
     primes = sieve_of_eratosthenes(n)
-    
+
     # Track available numbers
     available = [True] * (n + 1)
     available[0] = False  # 0 is not in the game
-    
+
     moves = 0
-    
+
     # Simulate the game
     while True:
         # Find the smallest available prime
@@ -62,17 +62,17 @@ def simulate_game(n):
             if prime <= n and available[prime]:
                 prime_chosen = prime
                 break
-        
+
         # If no prime is available, current player loses
         if prime_chosen is None:
             break
-        
+
         # Remove the prime and all its multiples
         for i in range(prime_chosen, n + 1, prime_chosen):
             available[i] = False
-        
+
         moves += 1
-    
+
     # Maria goes first, so if moves is odd
     # Maria made the last move and wins
     return "Maria" if moves % 2 == 1 else "Ben"
@@ -94,10 +94,10 @@ def isWinner(x, nums):
     """
     if x <= 0 or not nums:
         return None  # No rounds to play or invalid input
-    
+
     # Only consider the first x rounds
     rounds_to_play = nums[:x]
-    
+
     maria_wins = 0
     ben_wins = 0
 
