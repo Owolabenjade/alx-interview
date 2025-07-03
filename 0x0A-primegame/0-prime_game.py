@@ -1,7 +1,21 @@
 #!/usr/bin/python3
 
+"""
+Prime Game
+
+This module contains the logic to simulate the Prime Game, where two players take turns removing primes and their multiples from a sequence of integers.
+"""
+
 def sieve_of_eratosthenes(limit):
-    """Returns a list of primes up to the limit using the Sieve of Eratosthenes."""
+    """
+    Implements the Sieve of Eratosthenes to find all prime numbers up to a given limit.
+
+    Args:
+        limit (int): The upper bound of the range to find primes.
+
+    Returns:
+        list: A list of prime numbers up to the specified limit.
+    """
     primes = [True] * (limit + 1)
     primes[0], primes[1] = False, False  # 0 and 1 are not primes
     for i in range(2, int(limit**0.5) + 1):
@@ -11,7 +25,16 @@ def sieve_of_eratosthenes(limit):
     return [i for i in range(2, limit + 1) if primes[i]]
 
 def isWinner(x, nums):
-    """Returns the winner of the game based on the rounds played."""
+    """
+    Determines the winner of the Prime Game based on multiple rounds.
+
+    Args:
+        x (int): The number of rounds to play.
+        nums (list of int): A list of integers, each representing the upper bound of the range for a game.
+
+    Returns:
+        str: The name of the player who won the most rounds, or None if it's a tie.
+    """
     max_n = max(nums)
     primes = sieve_of_eratosthenes(max_n)
     prime_set = set(primes)
