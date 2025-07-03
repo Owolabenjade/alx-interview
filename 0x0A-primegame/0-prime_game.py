@@ -32,41 +32,78 @@ def sieve_of_eratosthenes(limit):
     return [i for i in range(2, limit + 1) if primes[i]]
 
 
+def simulate_game(n):
+    """
+    Simulates a single game and determines the winner.
+    
+    Args:
+        n (int): The upper bound of numbers available (1 to n)
+    
+    Returns:
+        str: "Maria" if Maria wins, "Ben" if Ben wins
+    """
+    if n <= 1:
+        return "Ben"  # No primes available, Ben wins by default
+    
+    # Get all primes up to n
+    primes = sieve_of_eratosthenes(n)
+    
+    # Track available numbers
+    available = [True] * (n + 1)
+    available[0] = False  # 0 is not in the game
+    
+    moves = 0
+    
+    # Simulate the game
+    while True:
+        # Find the smallest available prime
+        prime_chosen = None
+        for prime in primes:
+            if prime <= n and available[prime]:
+                prime_chosen = prime
+                break
+        
+        # If no prime is available, current player loses
+        if prime_chosen is None:
+            break
+        
+        # Remove the prime and all its multiples
+        for i in range(prime_chosen, n + 1, prime_chosen):
+            available[i] = False
+        
+        moves += 1
+    
+    # Maria goes first, so if moves is odd
+    # Maria made the last move and wins
+    return "Maria" if moves % 2 == 1 else "Ben"
+
+
 def isWinner(x, nums):
     """
-    Determines the winner of the Prime Game based on multiple rounds.
-
+    Determines the winner of the Prime Game
+    based on multiple rounds.
 
     Args:
         x (int): The number of rounds to play.
         nums (list of int): A list of integers,
-        each representing the upper
-        bound of the range for a game.
+        each representing the upper bound of the range for a game.
 
     Returns:
         str: The name of the player who
         won the most rounds, or None if it's a tie.
     """
-    if x == 0 or not nums:
-        return None  # No rounds to play or empty list
-
-    max_n = max(nums)
-    primes = sieve_of_eratosthenes(max_n)
-    prime_set = set(primes)
-
+    if x <= 0 or not nums:
+        return None  # No rounds to play or invalid input
+    
+    # Only consider the first x rounds
+    rounds_to_play = nums[:x]
+    
     maria_wins = 0
     ben_wins = 0
 
-    for n in nums:
-        if n <= 1:
-            continue  # Skip rounds where no valid primes are available
-
-        # Count how many primes are there up to n
-        count_primes = sum(1 for p in prime_set if p <= n)
-
-        # Maria goes first, if the number of
-        # primes is odd, Maria wins, else Ben wins
-        if count_primes % 2 == 1:
+    for n in rounds_to_play:
+        winner = simulate_game(n)
+        if winner == "Maria":
             maria_wins += 1
         else:
             ben_wins += 1
@@ -83,4 +120,6 @@ def isWinner(x, nums):
 # Example usage:
 if __name__ == "__main__":
     print("Winner: {}".format(isWinner(3, [4, 5, 1])))
-    # Example output: Winner: Ben
+    print("Winner: {}".format(isWinner(5, [1, 2, 3, 4, 5])))
+    print("Winner: {}".format(isWinner(1, [1])))
+    print("Winner: {}".format(isWinner(-1, [10])))
