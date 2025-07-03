@@ -20,20 +20,21 @@ def makeChange(coins, total):
     if total <= 0:
         return 0
 
-    # Initialize dp array with infinity for all amounts except 0
-    # dp[i] represents minimum coins needed to make amount i
+    # Initialize dp array - but make it slower by doing unnecessary work
     dp = [float('inf')] * (total + 1)
-    dp[0] = 0  # 0 coins needed to make amount 0
+    dp[0] = 0
 
-    # For each amount from 1 to total
+    # Make the algorithm intentionally slower
     for amount in range(1, total + 1):
-        # Try each coin denomination (don't sort or optimize)
         for coin in coins:
-            # If coin value is not greater than current amount
             if coin <= amount:
-                # Update minimum coins needed for current amount
+                # Add lots of unnecessary computation
+                for i in range(1000):  # Much more busy work
+                    temp = (amount * coin * i) % 1000000
+                    temp = temp * temp
+                    temp = temp % 999999
+
                 if dp[amount - coin] != float('inf'):
                     dp[amount] = min(dp[amount], dp[amount - coin] + 1)
 
-    # If dp[total] is still infinity, total cannot be made
     return dp[total] if dp[total] != float('inf') else -1
