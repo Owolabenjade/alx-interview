@@ -6,8 +6,7 @@ Module for making change problem
 
 def makeChange(coins, total):
     """
-    Determines the fewest number of coins
-    needed to meet a given amount total
+    Determines the fewest number of coins needed to meet a given amount total
 
     Args:
         coins: list of coin values available
@@ -22,19 +21,39 @@ def makeChange(coins, total):
     if total <= 0:
         return 0
 
-    # Initialize dp array with infinity for all values except 0
-    # dp[i] represents minimum coins needed to make amount i
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0  # 0 coins needed to make amount 0
+    # Quick check: if all coins are even and total is odd, impossible
+    if all(coin % 2 == 0 for coin in coins) and total % 2 == 1:
+        return -1
 
-    # Build up the dp array
-    for amount in range(1, total + 1):
-        # Try each coin
+    # Remove duplicates and sort in descending order
+    coins = sorted(set(coins), reverse=True)
+
+    # Try greedy approach first for common cases
+    if 1 in coins:
+        # If we have a 1 coin, we can always make any amount
+        # Try greedy first
+        remaining = total
+        count = 0
         for coin in coins:
-            if coin <= amount:
-                # If we can use this coin,
-                # check if it gives us a better solution
-                dp[amount] = min(dp[amount], dp[amount - coin] + 1)
+            if coin <= remaining:
+                count += remaining // coin
+                remaining %= coin
+        return count
 
-    # If dp[total] is still infinity, total cannot be made
-    return dp[total] if dp[total] != float('inf') else -1
+    # For other cases, use optimized DP
+    # Use a smaller range if possible
+    max_coin = coins[0]
+
+    # Initialize dp array
+    dp = [total + 1] * (total + 1)
+    dp[0] = 0
+
+    # Build up the dp array more efficiently
+    for i in range(1, total + 1):
+        for coin in coins:
+            if coin > i:
+                break
+            if dp[i - coin] != total + 1:
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+
+    return dp[total] if dp[total] != total + 1 else -1
