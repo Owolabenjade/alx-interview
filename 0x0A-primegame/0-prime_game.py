@@ -22,7 +22,7 @@ def sieve_of_eratosthenes(limit):
     """
     if limit <= 1:
         return []  # No primes if limit is less than 2
-    
+
     primes = [True] * (limit + 1)
     primes[0], primes[1] = False, False  # 0 and 1 are not primes
     for i in range(2, int(limit**0.5) + 1):
@@ -49,7 +49,7 @@ def isWinner(x, nums):
     """
     if x == 0 or not nums:
         return None  # No rounds to play or empty list
-    
+
     max_n = max(nums)
     primes = sieve_of_eratosthenes(max_n)
     prime_set = set(primes)
@@ -82,5 +82,5 @@ def isWinner(x, nums):
 
 # Example usage:
 if __name__ == "__main__":
-    print("Winner: {}".format(isWinner(3, [4, 5, 1]))) 
+    print("Winner: {}".format(isWinner(3, [4, 5, 1])))
     # Example output: Winner: Ben
