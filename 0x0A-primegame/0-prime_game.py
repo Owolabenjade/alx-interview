@@ -20,6 +20,9 @@ def sieve_of_eratosthenes(limit):
     Returns:
         list: A list of prime numbers up to the specified limit.
     """
+    if limit <= 1:
+        return []  # No primes if limit is less than 2
+    
     primes = [True] * (limit + 1)
     primes[0], primes[1] = False, False  # 0 and 1 are not primes
     for i in range(2, int(limit**0.5) + 1):
@@ -44,6 +47,9 @@ def isWinner(x, nums):
         str: The name of the player who
         won the most rounds, or None if it's a tie.
     """
+    if x == 0 or not nums:
+        return None  # No rounds to play or empty list
+    
     max_n = max(nums)
     primes = sieve_of_eratosthenes(max_n)
     prime_set = set(primes)
@@ -52,11 +58,14 @@ def isWinner(x, nums):
     ben_wins = 0
 
     for n in nums:
+        if n <= 1:
+            continue  # Skip rounds where no valid primes are available
+
         # Count how many primes are there up to n
         count_primes = sum(1 for p in prime_set if p <= n)
 
         # Maria goes first, if the number of
-        # #primes is odd, Maria wins, else Ben wins
+        # primes is odd, Maria wins, else Ben wins
         if count_primes % 2 == 1:
             maria_wins += 1
         else:
@@ -73,4 +82,5 @@ def isWinner(x, nums):
 
 # Example usage:
 if __name__ == "__main__":
-    print("Winner: {}".format(isWinner(3, [4, 5, 1])))
+    print("Winner: {}".format(isWinner(3, [4, 5, 1]))) 
+    # Example output: Winner: Ben
